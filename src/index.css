@@ -1,0 +1,409 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================= GLOBAL BACKGROUND ================= */
+
+body {
+    @apply min-h-screen text-white;
+
+    background: radial-gradient(circle at top, #1a237e, #020617 70%);
+    background-attachment: fixed;
+}
+
+/* ⭐ Moving Stars */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.12;
+    animation: starMove 80s linear infinite;
+    z-index: -1;
+}
+
+@keyframes starMove {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-200px);
+    }
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes spinSlow {
+    from {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin-slow {
+    animation: spinSlow 40s linear infinite;
+}
+
+@keyframes floatCard {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+.animate-float {
+    animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeUp {
+    animation: fadeUp 0.5s ease forwards;
+}
+
+/* ================= GLASS PANELS ================= */
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: 0.4s;
+}
+
+.glass-panel:hover {
+    box-shadow: 0 0 40px rgba(99, 102, 241, 0.4);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+/* ================= BUTTON ================= */
+
+.load-btn {
+    padding: 10px 16px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #3b82f6, #9333ea);
+    transition: 0.3s;
+}
+
+.load-btn:hover {
+    transform: scale(1.06);
+    box-shadow: 0 0 20px rgba(147, 51, 234, 0.6);
+}
+
+/* ================= ASTEROID CARD ================= */
+
+.asteroid-card {
+    background: rgba(255, 255, 255, 0.07);
+    padding: 14px;
+    border-radius: 12px;
+    transition: 0.3s;
+    border: 1px solid transparent;
+}
+
+.asteroid-card:hover {
+    transform: translateY(-6px);
+    border-color: #60a5fa;
+    box-shadow: 0 0 18px rgba(96, 165, 250, 0.4);
+}
+
+/* ================= CONTACT CARD ================= */
+
+.contact-card {
+    display: flex;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    transition: 0.3s;
+}
+
+.contact-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 25px rgba(59, 130, 246, 0.4);
+}
+
+/* ================= FLOATING INPUTS ================= */
+
+.floating-group {
+    position: relative;
+}
+
+.floating-group input,
+.floating-group textarea {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    border-radius: 10px;
+    outline: none;
+    border: 1px solid transparent;
+}
+
+.floating-group input:focus,
+.floating-group textarea:focus {
+    border-color: #60a5fa;
+}
+
+.floating-group label {
+    position: absolute;
+    left: 14px;
+    top: 14px;
+    font-size: 0.85rem;
+    color: gray;
+    transition: 0.3s;
+}
+
+.floating-group input:focus+label,
+.floating-group input:valid+label,
+.floating-group textarea:focus+label,
+.floating-group textarea:valid+label {
+    top: -8px;
+    font-size: 0.7rem;
+    color: #60a5fa;
+}
+
+/* ================= SERVICE DEMO BADGE ================= */
+
+.demo-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+/* ================= VELOCITY BAR ================= */
+
+.velocity-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.velocity-fill {
+    height: 100%;
+    background: linear-gradient(to right, #3b82f6, #9333ea);
+    animation: progressGlow 2s infinite alternate;
+}
+
+@keyframes progressGlow {
+    from {
+        filter: brightness(1);
+    }
+
+    to {
+        filter: brightness(1.4);
+    }
+}
+
+/* ================= STATS CARD ================= */
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 12px 20px;
+    border-radius: 12px;
+}
+
+/* ================= SOCIAL ICON ================= */
+
+.social-icon {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-icon:hover {
+    transform: scale(1.2);
+    color: #60a5fa;
+}
+
+/* ================= CUSTOM SCROLLBAR ================= */
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #6366f1;
+    border-radius: 10px;
+}
+
+/* ================= CALENDAR ================= */
+
+.react-calendar {
+    background: #111827;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* ===== Cosmic Calendar ===== */
+
+.react-calendar {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: 0.4s;
+}
+
+/* Month Header */
+.react-calendar__navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.react-calendar__navigation button {
+    color: white;
+    background: transparent;
+    border-radius: 8px;
+    padding: 6px 10px;
+    transition: 0.3s;
+}
+
+.react-calendar__navigation button:hover {
+    background: rgba(99, 102, 241, 0.4);
+}
+
+/* Weekdays */
+.react-calendar__month-view__weekdays {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: #9ca3af;
+}
+
+/* Day Tiles */
+.react-calendar__tile {
+    border-radius: 10px;
+    padding: 8px;
+    transition: 0.3s;
+    color: white;
+}
+
+/* Hover Day */
+.react-calendar__tile:hover {
+    background: rgba(99, 102, 241, 0.35);
+    transform: scale(1.05);
+}
+
+/* Selected Day */
+.react-calendar__tile--active {
+    background: linear-gradient(to right, #3b82f6, #9333ea);
+    color: white;
+    box-shadow: 0 0 15px rgba(147, 51, 234, 0.6);
+}
+
+/* Today Highlight */
+.react-calendar__tile--now {
+    border: 1px solid #60a5fa;
+}
+
+/* Weekend Styling */
+.react-calendar__month-view__days__day--weekend {
+    color: #f87171;
+}
+
+/* Disabled Dates */
+.react-calendar__tile:disabled {
+    opacity: 0.3;
+}
+
+/* Smooth Fade Animation */
+.react-calendar__viewContainer {
+    animation: fadeUp 0.4s ease;
+}
+
+.hazard-date {
+    border: 1px solid red;
+    box-shadow: 0 0 10px red;
+}
+
+.auth-btn {
+    position: relative;
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: 1px solid;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    overflow: hidden;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient Slide Animation */
+.auth-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, #3b82f6, #9333ea);
+    transform: translateX(-100%);
+    transition: 0.4s;
+    z-index: 0;
+}
+
+.auth-btn:hover::before {
+    transform: translateX(0);
+}
+
+/* Text Above Gradient */
+.auth-btn span,
+.auth-btn svg {
+    position: relative;
+    z-index: 2;
+}
+
+/* Glow Effect */
+.auth-btn:hover {
+    box-shadow: 0 0 18px rgba(147, 51, 234, 0.6);
+    transform: translateY(-3px);
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.section-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 24px;
+    border-radius: 16px;
+}
