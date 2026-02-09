@@ -1,11 +1,15 @@
-// Navbar.jsx
 import { useState, useEffect } from "react";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import logo from "../assets/image copy.png";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [openUserMenu, setOpenUserMenu] = useState(false);
+
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
     { name: "Dashboard", path: "/" },
@@ -18,7 +22,6 @@ function Navbar() {
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -26,6 +29,12 @@ function Navbar() {
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }, [isOpen]);
+
+  const handleLogout = () => {
+    logout();
+    setOpenUserMenu(false);
+    navigate("/login");
+  };
 
   const navStyle = `fixed top-0 w-full z-50 transition duration-300 ${
     scrolled
@@ -59,26 +68,51 @@ function Navbar() {
             {menuItems.map((item) => (
               <NavLink key={item.name} to={item.path} className={linkStyle}>
                 {item.name}
-
-                {/* Hover Underline */}
                 <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-300"></span>
               </NavLink>
             ))}
 
-            {/* User Button */}
-      
-            <Link
-              to="/user"
-              className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition"
-            >
-              User
-            </Link>
+            {/* 🔥 USER SECTION */}
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setOpenUserMenu(!openUserMenu)}
+                  className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition font-semibold"
+                >
+                  {user.name}
+                </button>
+
+                {openUserMenu && (
+                  <div className="absolute right-0 mt-3 w-40 bg-black/80 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg overflow-hidden">
+                    <Link
+                      to="/profile"
+                      onClick={() => setOpenUserMenu(false)}
+                      className="block px-4 py-2 text-sm hover:bg-white/10 transition"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition"
+              >
+                Login
+              </Link>
+            )}
           </div>
 
-          {/* Hamburger Menu */}
+          {/* Hamburger */}
           <button
-            aria-label="Toggle Menu"
-            className="md:hidden text-3xl hover:scale-110 transition"
+            className="md:hidden text-3xl"
             onClick={() => setIsOpen(!isOpen)}
           >
             {isOpen ? "✕" : "☰"}
@@ -99,20 +133,32 @@ function Navbar() {
             <NavLink
               key={item.name}
               to={item.path}
-              className="text-lg text-gray-200 hover:text-blue-400 transition"
               onClick={() => setIsOpen(false)}
+              className="text-lg text-gray-200 hover:text-blue-400 transition"
             >
               {item.name}
             </NavLink>
           ))}
 
-          <Link
-            to="/user"
-            onClick={() => setIsOpen(false)}
-            className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition"
-          >
-            User
-          </Link>
+          {user ? (
+            <>
+              <span className="text-blue-400 font-semibold">{user.name}</span>
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 rounded-lg bg-red-500/80 hover:bg-red-600 transition"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link
+              to="/login"
+              onClick={() => setIsOpen(false)}
+              className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600"
+            >
+              Login
+            </Link>
+          )}
         </div>
       </div>
     </nav>

@@ -390,6 +390,7 @@ body::before {
     font-weight: bold;
     margin-bottom: 10px;
 }
+
 .glass-card {
     background: rgba(255, 255, 255, 0.08);
     padding: 24px;
@@ -402,8 +403,45 @@ body::before {
     font-weight: bold;
     margin-bottom: 10px;
 }
+
 .glass-card {
     background: rgba(255, 255, 255, 0.08);
     padding: 24px;
     border-radius: 16px;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 0.6;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-260px);
+        opacity: 0;
+    }
+}
+
+@keyframes slideDownFade {
+    0% {
+        transform: translateY(-40px);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-down {
+    animation: slideDownFade 1s ease-out forwards;
 }

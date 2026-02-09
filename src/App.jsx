@@ -10,6 +10,7 @@ import Contact from "./pages/contact/Contact";
 import Login from "./pages/login/Login";
 import Signup from "./pages/login/Signup";
 import User from "./pages/login/User";
+import Profile from "./pages/profile/Profile"
 
 function App() {
   return (
@@ -28,7 +29,9 @@ function App() {
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/user" element={<User />} />
+          <Route path="/profile" element={ <Profile/>} />
         </Route>
+
       </Routes>
     </>
   );
