@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Service3DPreview from "../Dimension/Service3DPreview";
 import SolarSystemPreview from "../Dimension/SolarSystemPreview";
 import SpaceParticles from "../Dimension/SpaceParticles";
-import Footer from "../footer/Footer";
 import {
   Radar,
   AlertTriangle,
@@ -191,7 +190,7 @@ function Services() {
           </div>
         </div>
       )}
-    <Footer/>
+  
     </div>
   );
 }

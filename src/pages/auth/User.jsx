@@ -1,4 +1,4 @@
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/auth/useAuth";
 
 function User() {
   const { user, logout } = useAuth();

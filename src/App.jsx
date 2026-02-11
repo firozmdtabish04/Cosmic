@@ -1,16 +1,14 @@
-import Navbar from "./navbar/Navbar";
 import { Routes, Route } from "react-router-dom";
 import AuthGuard from "./guard/AuthGuard";
 
-// Pages
+import Navbar from "./components/layout/navbar/Navbar";
 import Home from "./pages/home/Home";
 import About from "./pages/about/About";
 import Services from "./pages/services/Services";
 import Contact from "./pages/contact/Contact";
-import Login from "./pages/login/Login";
-import Signup from "./pages/login/Signup";
-import User from "./pages/login/User";
-import Profile from "./pages/profile/Profile"
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import Profile from "./pages/profile/Profile";
 
 function App() {
   return (
@@ -18,20 +16,18 @@ function App() {
       <Navbar />
 
       <Routes>
-        {/* Public Routes */}
+        {/* Public */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        {/* Protected Routes Group */}
+        {/* Protected */}
         <Route element={<AuthGuard />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/user" element={<User />} />
-          <Route path="/profile" element={ <Profile/>} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
-
       </Routes>
     </>
   );

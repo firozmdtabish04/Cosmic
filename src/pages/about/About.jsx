@@ -3,7 +3,7 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import EarthOrbitScene from "../Dimension/EarthOrbitScene";
 import SpaceParticles from "../Dimension/SpaceParticles";
-import Footer from "../footer/Footer"
+
 function About() {
   const apiKey = import.meta.env.VITE_NASA_API_KEY;
 
@@ -165,11 +165,8 @@ function About() {
           </div>
         </div>
       </div>
-      <div>
-        <Footer/>
-      </div>
+      <div></div>
     </div>
-    
   );
 }
 

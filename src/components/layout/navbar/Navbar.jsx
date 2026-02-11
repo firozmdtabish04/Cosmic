@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import logo from "../assets/image copy.png";
+import { useAuth } from "../../../hooks/auth/useAuth";
+import logo from "../../../assets/image copy.png";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [openUserMenu, setOpenUserMenu] = useState(false);
 
-  const { user, logout } = useAuth();
+  const { user, logout, loading } = useAuth(); // ⭐ added loading
   const navigate = useNavigate();
 
   const menuItems = [
@@ -43,9 +43,12 @@ function Navbar() {
   }`;
 
   const linkStyle = ({ isActive }) =>
-    `relative font-medium transition group ${
+    `relative font-medium transition ${
       isActive ? "text-blue-400" : "text-gray-200"
     }`;
+
+  /* ⭐ Prevent UI flicker while restoring auth */
+  if (loading) return null;
 
   return (
     <nav className={navStyle}>
@@ -68,18 +71,21 @@ function Navbar() {
             {menuItems.map((item) => (
               <NavLink key={item.name} to={item.path} className={linkStyle}>
                 {item.name}
-                <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-blue-400 to-purple-500 group-hover:w-full transition-all duration-300"></span>
               </NavLink>
             ))}
 
-            {/* 🔥 USER SECTION */}
+            {/* USER SECTION */}
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setOpenUserMenu(!openUserMenu)}
-                  className="px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition font-semibold"
+                  className="flex items-center gap-2 px-5 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 hover:scale-105 transition font-semibold"
                 >
-                  {user.name}
+                  <div className="w-7 h-7 flex items-center justify-center rounded-full bg-white text-black font-bold">
+                    {user.username?.charAt(0).toUpperCase()}
+                  </div>
+
+                  {user.username}
                 </button>
 
                 {openUserMenu && (
@@ -91,6 +97,7 @@ function Navbar() {
                     >
                       Profile
                     </Link>
+
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/10 transition"
@@ -110,7 +117,7 @@ function Navbar() {
             )}
           </div>
 
-          {/* Hamburger */}
+          {/* Mobile Button */}
           <button
             className="md:hidden text-3xl"
             onClick={() => setIsOpen(!isOpen)}
@@ -142,7 +149,10 @@ function Navbar() {
 
           {user ? (
             <>
-              <span className="text-blue-400 font-semibold">{user.name}</span>
+              <span className="text-blue-400 font-semibold">
+                {user.username}
+              </span>
+
               <button
                 onClick={handleLogout}
                 className="px-6 py-2 rounded-lg bg-red-500/80 hover:bg-red-600 transition"

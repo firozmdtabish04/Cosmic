@@ -1,68 +1,64 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../hooks/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import ParticlesBackground from "../Dimension/ParticlesBackground";
+import { getProfile, updateProfile } from "../../services/profile";
 
 function Profile() {
   const { user, login, logout } = useAuth();
   const navigate = useNavigate();
-
   const [edit, setEdit] = useState(false);
 
   const [form, setForm] = useState({
-    name: "",
+    username: "",
     email: "",
-    bio: "",
+    phoneNumber: "",
+    dob: "",
+    joinedDate: "",
     avatar: "",
-    phone: "",
+    bio: "",
     location: "",
     github: "",
     linkedin: "",
-    joinedAt: "",
-    preferences: {
-      darkMode: true,
-      emailNotifications: true,
-    },
   });
 
-  /* Redirect if not logged in */
+  /* ================= FETCH PROFILE FROM DATABASE ================= */
+
   useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    } else {
-      setForm({
-        name: user.name || "",
-        email: user.email || "",
-        bio: user.bio || "Passionate about space & technology 🚀",
-        avatar: user.avatar || "",
-        phone: user.phone || "",
-        location: user.location || "",
-        github: user.github || "",
-        linkedin: user.linkedin || "",
-        joinedAt: user.joinedAt || new Date().toDateString(),
-        preferences: user.preferences || {
-          darkMode: true,
-          emailNotifications: true,
-        },
-      });
-    }
-  }, [user, navigate]);
+    const fetchProfile = async () => {
+      try {
+        const data = await getProfile();
+
+        login(data);
+
+        setForm({
+          username: data.username || "",
+          email: data.email || "",
+          phoneNumber: data.phoneNumber || "",
+          dob: data.dob || "",
+          joinedDate: data.joinedDate || "",
+          avatar: data.avatar || "",
+          bio: data.bio || "Passionate about space & technology 🚀",
+          location: data.location || "",
+          github: data.github || "",
+          linkedin: data.linkedin || "",
+        });
+      } catch (error) {
+        navigate("/login");
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  /* ================= FORM CHANGE ================= */
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handlePrefChange = (e) => {
-    setForm({
-      ...form,
-      preferences: {
-        ...form.preferences,
-        [e.target.name]: e.target.checked,
-      },
-    });
-  };
+  /* ================= AVATAR UPLOAD ================= */
 
-  /* Avatar Upload */
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -71,15 +67,26 @@ function Profile() {
     reader.onloadend = () => {
       setForm({ ...form, avatar: reader.result });
     };
+
     reader.readAsDataURL(file);
   };
 
-  const handleSave = () => {
-    const updatedUser = { ...user, ...form };
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-    login(updatedUser);
-    setEdit(false);
+  /* ================= SAVE PROFILE ================= */
+
+  const handleSave = async () => {
+    try {
+      const updatedUser = await updateProfile(form);
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      login(updatedUser);
+
+      setEdit(false);
+    } catch (error) {
+      alert("Failed to update profile");
+    }
   };
+
+  /* ================= LOGOUT ================= */
 
   const handleLogout = () => {
     logout();
@@ -88,11 +95,12 @@ function Profile() {
 
   if (!user) return null;
 
-  /* Profile completion */
+  /* ================= PROFILE COMPLETION ================= */
+
   const filledFields = [
-    form.name,
+    form.username,
+    form.phoneNumber,
     form.bio,
-    form.phone,
     form.location,
     form.github,
     form.linkedin,
@@ -102,7 +110,7 @@ function Profile() {
   const completion = Math.round((filledFields / 7) * 100);
 
   return (
-    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white px-6 overflow-hidden ">
+    <div className="relative min-h-screen flex justify-center items-center bg-gradient-to-br from-black via-gray-900 to-gray-800 text-white px-6 overflow-hidden">
       <ParticlesBackground />
 
       <div className="relative z-10 w-full max-w-xl">
@@ -118,7 +126,7 @@ function Profile() {
                 />
               ) : (
                 <span className="text-4xl font-bold">
-                  {form.name?.charAt(0).toUpperCase()}
+                  {form.username?.charAt(0).toUpperCase()}
                 </span>
               )}
             </div>
@@ -128,8 +136,8 @@ function Profile() {
                 Upload Photo
                 <input
                   type="file"
-                  accept="image/*"
                   hidden
+                  accept="image/*"
                   onChange={handleImageUpload}
                 />
               </label>
@@ -140,15 +148,17 @@ function Profile() {
           <h2 className="text-2xl font-bold text-center bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent">
             My Profile
           </h2>
+
           <p className="text-center text-gray-400 mb-4">
-            Joined on {form.joinedAt}
+            Joined on {form.joinedDate}
           </p>
 
-          {/* Profile Completion */}
+          {/* Completion */}
           <div className="mb-6">
             <p className="text-sm text-gray-400 mb-1">
               Profile Completion: {completion}%
             </p>
+
             <div className="w-full bg-white/10 rounded-full h-2">
               <div
                 className="bg-gradient-to-r from-green-400 to-cyan-400 h-2 rounded-full transition-all"
@@ -157,18 +167,17 @@ function Profile() {
             </div>
           </div>
 
-          {/* Basic Info */}
-          <label className="text-sm text-gray-400">Name</label>
+          {/* Username */}
+          <label className="text-sm text-gray-400">Username</label>
           <input
-            name="name"
-            value={form.name}
+            name="username"
+            value={form.username}
             onChange={handleChange}
             disabled={!edit}
-            className={`w-full p-2 mb-3 rounded-lg bg-black/40 border ${
-              edit ? "border-gray-600" : "border-transparent"
-            }`}
+            className="w-full p-2 mb-3 rounded-lg bg-black/40 border border-gray-600"
           />
 
+          {/* Email */}
           <label className="text-sm text-gray-400">Email</label>
           <input
             value={form.email}
@@ -176,39 +185,48 @@ function Profile() {
             className="w-full p-2 mb-3 rounded-lg bg-black/30 opacity-70"
           />
 
-          <label className="text-sm text-gray-400">Bio</label>
+          {/* Phone */}
+          <label className="text-sm text-gray-400">Phone</label>
+          <input
+            name="phoneNumber"
+            value={form.phoneNumber}
+            onChange={handleChange}
+            disabled={!edit}
+            className="w-full p-2 mb-3 rounded-lg bg-black/40 border border-gray-600"
+          />
+
+          {/* DOB */}
+          <label className="text-sm text-gray-400">Date of Birth</label>
+          <input
+            type="date"
+            name="dob"
+            value={form.dob}
+            onChange={handleChange}
+            disabled={!edit}
+            className="w-full p-2 mb-4 rounded-lg bg-black/40 border border-gray-600"
+          />
+
+          {/* Bio */}
           <textarea
             name="bio"
             value={form.bio}
             onChange={handleChange}
             disabled={!edit}
             rows={3}
-            className={`w-full p-2 mb-4 rounded-lg bg-black/40 border ${
-              edit ? "border-gray-600" : "border-transparent"
-            }`}
+            className="w-full p-2 mb-4 rounded-lg bg-black/40 border border-gray-600"
           />
 
-          {/* Extra Details */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-            <input
-              name="phone"
-              placeholder="Phone"
-              value={form.phone}
-              onChange={handleChange}
-              disabled={!edit}
-              className="p-2 rounded-lg bg-black/40 border border-gray-600"
-            />
-            <input
-              name="location"
-              placeholder="Location"
-              value={form.location}
-              onChange={handleChange}
-              disabled={!edit}
-              className="p-2 rounded-lg bg-black/40 border border-gray-600"
-            />
-          </div>
+          {/* Location */}
+          <input
+            name="location"
+            placeholder="Location"
+            value={form.location}
+            onChange={handleChange}
+            disabled={!edit}
+            className="w-full p-2 mb-3 rounded-lg bg-black/40 border border-gray-600"
+          />
 
-          {/* Social Links */}
+          {/* Social */}
           <input
             name="github"
             placeholder="GitHub URL"
@@ -226,31 +244,6 @@ function Profile() {
             disabled={!edit}
             className="w-full p-2 mb-6 rounded-lg bg-black/40 border border-gray-600"
           />
-
-          {/* Preferences */}
-          <div className="mb-6">
-            <p className="text-sm text-gray-400 mb-2">Preferences</p>
-            <label className="flex items-center gap-2 text-sm">
-              <input
-                type="checkbox"
-                name="darkMode"
-                checked={form.preferences.darkMode}
-                onChange={handlePrefChange}
-                disabled={!edit}
-              />
-              Dark Mode
-            </label>
-            <label className="flex items-center gap-2 text-sm mt-2">
-              <input
-                type="checkbox"
-                name="emailNotifications"
-                checked={form.preferences.emailNotifications}
-                onChange={handlePrefChange}
-                disabled={!edit}
-              />
-              Email Notifications
-            </label>
-          </div>
 
           {/* Buttons */}
           <div className="flex gap-3">

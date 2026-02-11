@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SpaceParticles from "../Dimension/SpaceParticles";
 import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react";
-import Footer from "../footer/Footer"
 function Contact() {
   const [submitted, setSubmitted] = useState(false);
 
@@ -123,7 +122,7 @@ function Contact() {
           Launch Dashboard
         </button>
       </div>
-      <Footer/>
+  
     </div>
   );
 }

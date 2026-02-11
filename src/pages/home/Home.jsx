@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Earth from "../../assets/earth.svg";
 import Astroid from "../../assets/image copy 2.png";
 import SpaceParticles from "../../pages/Dimension/SpaceParticles";
-import { getTodayAsteroids } from "../../services/nasaApi";
+import { getTodayAsteroids } from "../../services/api/nasaApi";
 
 function Home() {
   const [asteroids, setAsteroids] = useState([]);
